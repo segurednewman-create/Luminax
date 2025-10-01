@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luminax</title>
+  <title>Eljubi</title>
   <meta name="author" content="Andrey L Newman">
   <meta name="copyright" content="© Andrey L Newman, 2025">
   <style>
@@ -19,7 +19,26 @@
       min-height: 100vh;
       margin: 0;
     }
-    h1, h2 { margin-bottom: 16px; text-align: center; }
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    header img {
+      max-width: 200px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    header h1 {
+      margin: 0.5rem 0 0;
+      font-size: 2.5rem;
+      color: #FFB600;
+    }
+    header .tagline {
+      margin: 0.25rem 0;
+      font-size: 1.1rem;
+      color: #FFFFFF;
+    }
     form, .controls, .bookmark-tools {
       display: flex;
       flex-wrap: wrap;
@@ -37,7 +56,7 @@
     }
     input[type="text"] {
       background-color: #ffffff;
-      color: #000000;
+      color: #003366;
       width: 100%;
       max-width: 400px;
     }
@@ -62,10 +81,19 @@
     }
     li { margin: 5px 0; list-style: none; text-align: center; }
     a { color: #00bfff; text-decoration: none; }
+    .spiritual-frase {
+      margin: 2rem 0 1rem;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #FFB600;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.4;
+    }
     footer {
       margin-top: auto;
       padding-top: 20px;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: #777;
       text-align: center;
       width: 100%;
@@ -77,14 +105,19 @@
         gap: 8px;
       }
       input[type="submit"], button { width: 100%; }
-      h1 { font-size: 1.5rem; }
-      h2 { font-size: 1.2rem; }
+      header h1 { font-size: 2rem; }
+      .spiritual-frase { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
-  <h1>Luminax</h1>
-  <form id="searchForm" target="_blank" style="margin-top: 40px;">
+
+  <header>
+    <h1>WM</h1>
+    <p class="tagline">“Buscar con propósito es encontrar la propia esencia.”</p>
+  </header>
+
+  <form id="searchForm" target="_blank">
     <input type="text" id="query" placeholder="Búsqueda, consulta y acceso a Internet" required>
     <select id="engine">
       <option value="auto">Motor automático</option>
@@ -121,8 +154,12 @@
   </div>
   <ul id="bookmarkResults"></ul>
 
+  <p class="spiritual-frase">
+    En cada chispa de descubrimiento brilla la luz del alma.
+  </p>
+
   <footer>
-    Desarrollado por Andrey L Newman © 2025. Todos los derechos reservados.
+    Desarrollado por Andrey L Newman © 2025. Todos los derechos reservados. Jubiloux: ignite your joy
   </footer>
 
   <script>
@@ -209,4 +246,3 @@
   </script>
 </body>
 </html>
-```
