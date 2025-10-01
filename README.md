@@ -53,7 +53,6 @@ No requiere servidor ni dependencias externas: todo funciona en el cliente.
 
 ## Personalización
 
-- **Meta datos:** Edita `<meta name="author">` y `<meta name="copyright">` en el `<head>`.  
 - **Motores de búsqueda:** En el bloque JavaScript  
   ```js
   const engines = { /* "clave": "https://...q=" */ };
