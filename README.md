@@ -1,6 +1,6 @@
-# Luminax
+# NET.ON
 
-Luminax es una página web de búsqueda rápida y enfoque educativo. Integra múltiples motores de búsqueda, accesos directos a herramientas clave, filtrado de marcadores y una ventana emergente de consulta con ERNIE X1.1. Todo diseñado para ser ágil, claro y responsive.
+NET.ON es una página web de búsqueda rápida y enfoque educativo. Integra múltiples motores de búsqueda, accesos directos a herramientas clave, filtrado de marcadores y una ventana emergente de consulta con ERNIE X1.1. Todo diseñado para ser ágil, claro y responsive.
 
 ---
 
