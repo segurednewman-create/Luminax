@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CONSYSTEMAXS</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+      height: 100vh;
+    }
+    h1, h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    form, .controls, .bookmark-tools {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    input[type="text"], select, input[type="submit"], button {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+    }
+    input[type="text"] {
+      width: 300px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    select {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    input[type="submit"], button {
+      background-color: #4285f4;
+      color: white;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover, button:hover {
+      background-color: #357ae8;
+    }
+    ul {
+      max-height: 400px;
+      overflow-y: auto;
+      padding-left: 0;
+      width: 100%;
+    }
+    li {
+      margin: 5px 0;
+      list-style: none;
+      text-align: center;
+    }
+    a {
+      color: #00bfff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>CONSYSTEMAXS</h1>
+
+  <!-- Buscador web -->
+  <form id="searchForm" target="_blank" style="margin-top: 40px;">
+    <input type="text" id="query" placeholder="Busqueda, consulta y acceso a Internet " required>
+    <select id="engine">
+      <option value="auto">Motor automático</option>
+      <option value="google">Google</option>
+      <option value="duckduckgo">DuckDuckGo</option>
+      <option value="startpage">Startpage</option>
+      <option value="qwant">Qwant</option>
+      <option value="mojeek">Mojeek</option>
+      <option value="dogpile">Dogpile</option>
+      <option value="metacrawler">Metacrawler</option>
+      <option value="wiby">Wiby</option>
+    </select>
+    <input type="submit" value="Buscar">
+  </form>
+
+  <!-- Herramientas focalizadas -->
+  <h2> Enlaces Directos </h2>
+  <div class="controls">
+    <button onclick="window.open('https://translate.google.com', '_blank')">Traductor</button>
+    <button onclick="window.open('https://www.google.com/search?q=site:*.edu+library', '_blank')">Biblioteca digital</button>
+    <button onclick="window.open('https://www.google.com/imghp?hl=es&ogbl', '_blank')">Buscar imágenes</button>
+    <button onclick="window.open('https://www.netflix.com', '_blank')">Netflix</button>
+    <button onclick="window.open('https://www.youtube.com', '_blank')">YouTube</button>
+    <button onclick="window.open('https://mail.google.com', '_blank')">Gmail</button>
+    <button onclick="window.open('https://outlook.live.com', '_blank')">Outlook</button>
+    <button onclick="window.open('https://www.facebook.com', '_blank')">Facebook</button>
+    <button onclick="window.open('https://web.whatsapp.com', '_blank')">WhatsApp</button>
+    <!-- Botón actualizado para abrir ERNIE directamente -->
+    <button onclick="abrirErnie()">Consultar con ERNIE X1.1</button>
+  </div>
+
+  <!-- Buscador de marcadores -->
+  <h2>Buscador de marcadores</h2>
+  <div class="bookmark-tools">
+    <input type="file" id="fileInput" accept=".html">
+    <input type="text" id="bookmarkSearch" placeholder="Buscar entre tus marcadores...">
+  </div>
+  <ul id="bookmarkResults"></ul>
+
+  <script>
+    const engines = {
+      google: "https://www.google.com/search?q=",
+      duckduckgo: "https://duckduckgo.com/?q=",
+      startpage: "https://www.startpage.com/sp/search?query=",
+      qwant: "https://www.qwant.com/?q=",
+      mojeek: "https://www.mojeek.com/search?q=",
+      dogpile: "https://www.dogpile.com/serp?q=",
+      metacrawler: "https://www.metacrawler.com/serp?q=",
+      wiby: "https://wiby.me/?q="
+    };
+
+    function suggestEngine(query) {
+      const q = query.toLowerCase();
+      if (q.includes("pdf") || q.includes("tesis") || q.includes("investigación") || q.includes("académico")) return "mojeek";
+      if (q.includes("alternativo") || q.includes("sitios raros") || q.includes("poco referenciado")) return "wiby";
+      if (q.includes("noticias") || q.includes("clima") || q.includes("deportes")) return "metacrawler";
+      if (q.includes("linux") || q.includes("firewall") || q.includes("sistemas operativos")) return "duckduckgo";
+      return "google";
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const queryText = document.getElementById('query').value;
+      let selectedEngine = document.getElementById('engine').value;
+      if (selectedEngine === "auto") {
+        selectedEngine = suggestEngine(queryText);
+      }
+      const engineURL = engines[selectedEngine] || engines.google;
+      window.open(engineURL + encodeURIComponent(queryText), '_blank');
+    });
+
+    let bookmarks = [];
+
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const html = e.target.result;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = doc.querySelectorAll('a');
+        bookmarks = Array.from(links).map(link => ({
+          title: link.textContent.trim(),
+          url: link.href
+        }));
+        renderBookmarks('');
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById('bookmarkSearch').addEventListener('input', function () {
+      renderBookmarks(this.value.toLowerCase());
+    });
+
+    function renderBookmarks(query) {
+      const resultsList = document.getElementById('bookmarkResults');
+      resultsList.innerHTML = '';
+      const filtered = bookmarks.filter(b =>
+        b.title.toLowerCase().includes(query) || b.url.toLowerCase().includes(query)
+      );
+      filtered.forEach(b => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${b.url}" target="_blank">${b.title}</a>`;
+        resultsList.appendChild(li);
+      });
+    }
+
+    // Variables globales para controlar el estado de la ventana emergente
+    let ernieWindow = null;
+    let watchDogInterval = null;
+
+    function abrirErnie() {
+      if (ernieWindow && !ernieWindow.closed) {
+        // Si la ventana ya está abierta, llevarla al frente
+        ernieWindow.focus();
+        return;
+      }
+
+      // Obtener dimensiones de pantalla
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
+      
+      // Calcular tamaño (25% ancho, 85% alto)
+      const width = Math.floor(screenWidth * 0.25);
+      const height = Math.floor(screenHeight * 0.85);
+      
+      // Calcular posición con márgenes (15% arriba, 5% abajo)
+      const left = screenWidth - width; // Alineado a la derecha
+      const top = Math.floor(screenHeight * 0.15); // 15% desde arriba
+      
+      // Abrir ventana con las dimensiones y posición especificadas
+      ernieWindow = window.open(
+        'https://yiyan.baidu.com/chat', 
+        'ernieWindow',
+        `width=${width},height=${height},left=${left},top=${top},resizable,scrollbars=yes,menubar=no,toolbar=no,location=no,status=no`
+      );
+      
+      // Verificar si la ventana se abrió correctamente
+      if (!ernieWindow) {
+        alert('Por favor, permita las ventanas emergentes para acceder a ERNIE X1.1');
+        return;
+      }
+
+      // Configurar la ventana para que siempre esté visible y por encima
+      ernieWindow.focus();
+      
+      // Establecer z-index muy alto para mantenerla por encima
+      ernieWindow.document.body.style.zIndex = "2147483647";
+      
+      // Crear un intervalo para mantener la ventana enfocada
+      startFocusWatchDog();
+    }
+
+    function startFocusWatchDog() {
+      if (watchDogInterval) clearInterval(watchDogInterval);
+      
+      watchDogInterval = setInterval(() => {
+        if (ernieWindow && !ernieWindow.closed) {
+          try {
+            // Intentar enfocar la ventana si no lo está
+            if (!ernieWindow.document.hasFocus()) {
+              ernieWindow.focus();
+            }
+          } catch (e) {
+            // Si hay un error, probablemente la ventana fue cerrada
+            clearInterval(watchDogInterval);
+          }
+        }
+      }, 500); // Verificar cada 500ms
+    }
+
+    // Manejar el cierre de la ventana emergente
+    window.addEventListener('beforeunload', function() {
+      if (ernieWindow && !ernieWindow.closed) {
+        ernieWindow.close();
+      }
+      if (watchDogInterval) clearInterval(watchDogInterval);
+    });
+  </script>
+</body>
+</html>
